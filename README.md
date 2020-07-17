@@ -24,3 +24,7 @@ Or if you want tests to re-run when any file is changed:
 
     ptw .
     ptw . -- -vv # verbose mode
+
+## Running formatter
+
+    black .
