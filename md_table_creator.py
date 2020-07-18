@@ -1,6 +1,7 @@
 # Add utf file or something
 import re
 
+
 def create_md_table(sql_create_table: str) -> str:
     """Converts sql create table syntax into md table."""
     table_name = extract_table_name(sql_create_table)
@@ -19,6 +20,9 @@ def extract_table_name(sql_create_table: str) -> str:
     https://dev.mysql.com/doc/refman/5.7/en/create-table.html
     CREATE [TEMPORARY] TABLE [IF NOT EXISTS] tbl_name (
     """
-    raw_table = re.search("create (?:temporary )?table (?:if not exists)?(.*)\(", sql_create_table, re.IGNORECASE)
+    raw_table = re.search(
+        "create (?:temporary )?table (?:if not exists)?(.*)\(",
+        sql_create_table,
+        re.IGNORECASE,
+    )
     return raw_table.groups()[0].strip()
-
