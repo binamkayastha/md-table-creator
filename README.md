@@ -14,6 +14,7 @@ Create a virtualenv, example with `pyenv` and `pyenv-virtualenv` plugin:
     pyenv virtualenv 3.8.2 md-table-creator
     pyenv local md-table-creator # Automatically activates md-table-creator whenever you are in this folder
     pip install -r requirements.txt
+    pre-commit install
 
 ## Running Tests
 

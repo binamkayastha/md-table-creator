@@ -1,11 +1,16 @@
 import pytest
+
 from md_table_creator import create_md_table
 
 
 def test_create_id_table():
+    # fmt: off
     input = (
-        "CREATE TABLE table_name (\n" "    id BIGINT AUTO_INCREMENT PRIMARY KEY,\n" ");"
+        "CREATE TABLE table_name (\n"
+        "    id BIGINT AUTO_INCREMENT PRIMARY KEY,\n"
+        ");"
     )
+    # fmt: on
     expected = (
         "*table_name*\n"
         "Column | Type | Comments\n"

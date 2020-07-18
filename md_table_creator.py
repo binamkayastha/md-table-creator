@@ -20,9 +20,13 @@ def extract_table_name(sql_create_table: str) -> str:
     https://dev.mysql.com/doc/refman/5.7/en/create-table.html
     CREATE [TEMPORARY] TABLE [IF NOT EXISTS] tbl_name (
     """
-    raw_table = re.search(
+    if raw_table := re.search(
         "create (?:temporary )?table (?:if not exists)?(.*)\(",
         sql_create_table,
         re.IGNORECASE,
+    ):
+        if groups := raw_table.groups():
+            return groups[0].strip()
+    raise ValueError(
+        "Could not parse table name from SQL create table syntax. Make sure it's valid SQL syntax"
     )
-    return raw_table.groups()[0].strip()
