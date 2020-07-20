@@ -1,17 +1,35 @@
 # Add utf file or something
 import re
+from typing import List, Tuple
+
+
+def create_md_tables(sql_create_tables: str) -> str:
+    if sql_create_tables == "":
+        raise ValueError("Empty input")
+    sql_create_tables_arr = list(filter(None, sql_create_tables.split(";")))
+    md_tables = [create_md_table(t) for t in sql_create_tables_arr]
+    return "\n\n".join(md_tables)
 
 
 def create_md_table(sql_create_table: str) -> str:
     """Converts sql create table syntax into md table."""
+    # replace whitespace with spaces
+    sql_create_table = " ".join(sql_create_table.split())
     table_name = extract_table_name(sql_create_table)
-    expected = (
-        f"*{table_name}*\n"
+    columns, attributes = extract_columns(sql_create_table)
+    columns_str = "\n".join(f"{name}|{type}|" for (name, type) in columns)
+    attribute_str = "Attributes:\n" + "\n".join(attributes) + "\n" if attributes else ""
+    print(f"{attribute_str=}")
+
+    md_table = (
+        f"**{table_name}**"
+        "\n"
+        f"{attribute_str}"
         "Column | Type | Comments\n"
         "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        f"{columns_str}"
     )
-    return expected
+    return md_table
 
 
 def extract_table_name(sql_create_table: str) -> str:
@@ -21,12 +39,36 @@ def extract_table_name(sql_create_table: str) -> str:
     CREATE [TEMPORARY] TABLE [IF NOT EXISTS] tbl_name (
     """
     if raw_table := re.search(
-        "create (?:temporary )?table (?:if not exists)?(.*)\(",
+        r"create (?:temporary )?table (?:if not exists)?(.*?)\(",
         sql_create_table,
         re.IGNORECASE,
     ):
-        if groups := raw_table.groups():
-            return groups[0].strip()
+        if group := raw_table.group(1):
+            return group.strip()
     raise ValueError(
         "Could not parse table name from SQL create table syntax. Make sure it's valid SQL syntax"
+    )
+
+
+def extract_columns(sql_create_table: str) -> Tuple[List[Tuple[str, str]], List[str]]:
+    if all_columns_str := re.search(r"\((.*)\)", sql_create_table):
+        all_columns = all_columns_str.group(1).split(",")
+        extracted_values = []
+        attributes = []
+        for column in all_columns:
+            column = column.strip()
+            name = column.split(" ")[0]
+            if re.search(
+                r"index|key|fulltext|spatial|constraint|primary|unique|foreign|check",
+                name,
+                re.IGNORECASE,
+            ):
+                attributes.append(column)
+                continue
+            type = " ".join(column.split(" ")[1:])
+            extracted_values.append((name, type))
+        return extracted_values, attributes
+
+    raise ValueError(
+        "Could not parse columns from SQL create table syntax. Make sure it's valid SQL syntax"
     )
