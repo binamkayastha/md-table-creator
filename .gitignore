@@ -2,3 +2,6 @@ __pycache__
 .python-version
 .mypy_cache
 .vscode
+build/
+dist/
+md_table_creator.egg-info/

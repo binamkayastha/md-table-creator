@@ -4,6 +4,8 @@ Python 3.8.3
 
 Takes in a mysql create table syntax as an input and output markdown table which you can then paste into confluence.
 
+3.8.2 is used for the walrus operator
+
 # Contributing
 
 ## Setup
@@ -29,3 +31,12 @@ Or if you want tests to re-run when any file is changed:
 ## Running formatter
 
     black .
+
+# Building
+
+Followed these instructions:
+
+https://dzone.com/articles/executable-package-pip-install
+
+Compile: `python setup.py bdist_wheel`
+Upload to pypy: `python -m twine upload dist/*`
