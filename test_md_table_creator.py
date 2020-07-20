@@ -98,7 +98,6 @@ def test_multiple_columns():
         "name|VARCHAR(255)|"
     )
     actual = create_md_tables(input)
-    print(f"{expected}\n\n{actual}")
     assert expected == actual
 
 
@@ -126,7 +125,6 @@ def test_table_with_attribute():
         "store_id|INT NOT NULL|"
     )
     actual = create_md_tables(input)
-    print(f"{expected}\n\n{actual}")
     assert expected == actual
 
 
@@ -153,7 +151,6 @@ def test_multiple_tables():
         "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
     )
     actual = create_md_tables(input)
-    print(f"{expected}\n\n\n{actual}")
     assert expected == actual
 
 
