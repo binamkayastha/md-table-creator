@@ -40,3 +40,7 @@ https://dzone.com/articles/executable-package-pip-install
 
 Compile: `python setup.py bdist_wheel`
 Upload to pypy: `python -m twine upload dist/*`
+
+# Versioning
+
+Using semantic versioning

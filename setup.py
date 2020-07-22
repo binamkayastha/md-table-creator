@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="md_table_creator",
-    version="0.1",
+    version="0.2",
     scripts=["md_table_creator"],
     author="Binam Kayastha",
     author_email="binamkayastha@gmail.com",
