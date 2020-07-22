@@ -20,15 +20,15 @@ def create_md_table(sql_create_table: str) -> str:
     sql_create_table = " ".join(sql_create_table.split())
     table_name = extract_table_name(sql_create_table)
     columns, attributes = extract_columns(sql_create_table)
-    columns_str = "\n".join(f"{name}|{type}|" for (name, type) in columns)
+    columns_str = "\n".join(f"|{name}|{type}||" for (name, type) in columns)
     attribute_str = "Attributes:\n" + "\n".join(attributes) + "\n" if attributes else ""
 
     md_table = (
         f"**{table_name}**"
         "\n"
         f"{attribute_str}"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
         f"{columns_str}"
     )
     return md_table
@@ -52,8 +52,8 @@ def extract_table_name(sql_create_table: str) -> str:
 
 
 def extract_columns(sql_create_table: str) -> Tuple[List[Tuple[str, str]], List[str]]:
-    if all_columns_str := re.search(r"\((.*)\)", sql_create_table):
-        all_columns = all_columns_str.group(1).split(",")
+    if all_columns_re := re.search(r"\((.*)\)", sql_create_table):
+        all_columns = split_columns(all_columns_re.group(1))
         extracted_values = []
         attributes = []
         for column in all_columns:
@@ -73,6 +73,24 @@ def extract_columns(sql_create_table: str) -> Tuple[List[Tuple[str, str]], List[
     raise ValueError(
         "Could not parse columns from SQL create table syntax. Make sure it's valid SQL syntax"
     )
+
+
+def split_columns(all_columns_str):
+    """Splits commas that are outside of parenthesis"""
+    paren_count = 0
+    columns = []
+    previous_index = 0
+    for index, c in enumerate(all_columns_str):
+        if c == "(":
+            paren_count += 1
+        elif c == ")":
+            paren_count -= 1
+        elif c == "," and paren_count == 0:
+            columns.append(all_columns_str[previous_index:index])
+            # The + 1 is to skip the comma
+            previous_index = index + 1
+    columns.append(all_columns_str[previous_index:])
+    return columns
 
 
 def main():

@@ -13,9 +13,9 @@ def test_create_id_table():
     # fmt: on
     expected = (
         "**table_name**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|id|BIGINT AUTO_INCREMENT PRIMARY KEY||"
     )
     actual = create_md_tables(input)
     assert expected == actual
@@ -29,9 +29,9 @@ def test_different_table_name():
     )
     expected = (
         "**diff_table_name**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|id|BIGINT AUTO_INCREMENT PRIMARY KEY||"
     )
     actual = create_md_tables(input)
     assert expected == actual
@@ -55,9 +55,9 @@ def test_table_name_extracted(create_table):
     # fmt: on
     expected = (
         "**table_name**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|id|BIGINT AUTO_INCREMENT PRIMARY KEY||"
     )
     actual = create_md_tables(input)
     assert expected == actual
@@ -73,9 +73,9 @@ def test_different_column_name():
     # fmt: on
     expected = (
         "**table_name**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "diff_id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|diff_id|BIGINT AUTO_INCREMENT PRIMARY KEY||"
     )
     actual = create_md_tables(input)
     assert expected == actual
@@ -92,10 +92,10 @@ def test_multiple_columns():
     # fmt: on
     expected = (
         "**table_name**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|\n"
-        "name|VARCHAR(255)|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|id|BIGINT AUTO_INCREMENT PRIMARY KEY||\n"
+        "|name|VARCHAR(255)||"
     )
     actual = create_md_tables(input)
     assert expected == actual
@@ -117,14 +117,40 @@ def test_table_with_attribute():
         "**sales.visits**\n"
         "Attributes:\n"
         "FOREIGN KEY (store_id) REFERENCES sales.stores (store_id)\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "visit_id|INT PRIMARY KEY|\n"
-        "first_name|VARCHAR (50) NOT NULL|\n"
-        "phone|VARCHAR(20)|\n"
-        "store_id|INT NOT NULL|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|visit_id|INT PRIMARY KEY||\n"
+        "|first_name|VARCHAR (50) NOT NULL||\n"
+        "|phone|VARCHAR(20)||\n"
+        "|store_id|INT NOT NULL||"
     )
     actual = create_md_tables(input)
+    assert expected == actual
+
+
+def test_table_with_unique_key_attribute():
+    input = (
+        "CREATE TABLE students(\n"
+        "    S_Id int NOT NULL,\n"
+        "    LastName varchar (255) NOT NULL,\n"
+        "    FirstName varchar (255),\n"
+        "    City varchar (255),\n"
+        "    CONSTRAINT uc_studentId UNIQUE (S_Id, LastName)\n"
+        ")"
+    )
+    expected = (
+        "**students**\n"
+        "Attributes:\n"
+        "CONSTRAINT uc_studentId UNIQUE (S_Id, LastName)\n"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|S_Id|int NOT NULL||\n"
+        "|LastName|varchar (255) NOT NULL||\n"
+        "|FirstName|varchar (255)||\n"
+        "|City|varchar (255)||"
+    )
+    actual = create_md_tables(input)
+    print(f"{expected}\n\n{actual}")
     assert expected == actual
 
 
@@ -141,14 +167,14 @@ def test_multiple_tables():
     # fmt: on
     expected = (
         "**table_name**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|id|BIGINT AUTO_INCREMENT PRIMARY KEY||"
         "\n\n"
         "**table_name2**\n"
-        "Column | Type | Comments\n"
-        "-|-|-\n"
-        "id|BIGINT AUTO_INCREMENT PRIMARY KEY|"
+        "|Column | Type | Comments|\n"
+        "|-|-|-|\n"
+        "|id|BIGINT AUTO_INCREMENT PRIMARY KEY||"
     )
     actual = create_md_tables(input)
     assert expected == actual
