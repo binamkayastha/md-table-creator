@@ -34,6 +34,16 @@ Or if you want tests to re-run when any file is changed:
 
 # Building
 
+Installed pyinstaller and ran:
+
+    pyinstaller --onefile --console md_table_creator.py
+
+Then copied the executable from the dist folder to the runnable folder:
+
+    cp dist/md_table_creator runnable/md_table_creator
+
+# Uploading as a library to pypy
+
 Followed these instructions:
 
 https://dzone.com/articles/executable-package-pip-install
