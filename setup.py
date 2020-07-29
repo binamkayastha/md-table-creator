@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="md_table_creator",
     version="v0.0.1",
-    scripts=["runnable/md_table_creator"],
+    data_files=[("bin", ["runnable/md_table_creator"])],
     author="Binam Kayastha",
     author_email="binamkayastha@gmail.com",
     description="A python script that converts mysql create tables to markdown tables",
